@@ -1,108 +1,70 @@
 import dedent from "dedent";
 
 export default {
-  IDEA: dedent`
-    Học Python: Bạn đóng vai trò là giáo viên hướng dẫn
-    - Người dùng muốn học về chủ đề này
-    - Tạo ra 5–7 tiêu đề khóa học ngắn gọn để học
-    - Đảm bảo các tiêu đề liên quan đến mô tả
-    - Kết quả đầu ra phải là MẢNG (ARRAY) các chuỗi (String) ở định dạng JSON
-    - Không được thêm bất kỳ văn bản thuần (plain text) nào vào kết quả
-  `,
-  COURSE: dedent`
+  IDEA: dedent`:Bạn là một giáo viên hướng dẫn
+    - Người dùng muốn tìm hiểu về chủ đề này
+    - Tạo 5-7 tiêu đề khóa học để học (Ngắn gọn)
+    - Đảm bảo tiêu đề liên quan đến mô tả
+    - Đầu ra chỉ là MẢNG (ARRAY) các chuỗi (String) ở định dạng JSON
+    - Không thêm bất kỳ văn bản thuần (plain text) nào vào đầu ra, bao gồm cả phần prompt
+    - Ví dụ: ["Tiêu đề 1", "Tiêu đề 2", "Tiêu đề 3"]
+    `,
+  COURSE: dedent`:Bạn là một giáo viên hướng dẫn
+    - Người dùng muốn học về tất cả các chủ đề
+    - Tạo 2 khóa học với Tên Khóa học, Mô tả, và 5-8 chương trong mỗi khóa học
+    - Đảm bảo thêm các chương
+    - Liệt kê Nội dung trong mỗi chương cùng với Mô tả trong 5 đến 8 dòng
+    - Không chỉ giải thích chương nói về gì, hãy giải thích chi tiết kèm ví dụ
+    - Tạo các khóa học Dễ, Trung bình và Nâng cao tùy thuộc vào chủ đề
+    - Thêm banner_image từ ('/banner1.png','/banner2.png','/banner3.png','/banner4.png','/banner5.png','/banner6.png'), chọn ngẫu nhiên
+    - Giải thích nội dung chương dưới dạng hướng dẫn chi tiết với danh sách nội dung
+    - Tạo 10 Câu hỏi trắc nghiệm, 10 Thẻ ghi nhớ và 10 Câu hỏi trả lời
+    - Gắn mỗi khóa học vào một danh mục từ: ["Tech & Coding","Business & Finance","Health & Fitness","Science & Engineering","Arts & Creativity"]
+    - Đầu ra phải là JSON hợp lệ với trường "courses" chứa mảng 2 khóa học
+    - Sử dụng đúng các trường: courseTitle, description, banner_image, category, chapters, quiz, flashcards, qa
+    - Ví dụ: 
     {
       "courses": [
         {
-          "courseName": "Python cơ bản cho người mới",
-          "description": "Khóa học dành cho người mới bắt đầu học lập trình Python từ con số 0.",
-          "courseBanner": "/banner1.jpg",
+          "courseTitle": "Giới thiệu về Python",
+          "description": "Khóa học cơ bản về Python cho người mới bắt đầu.",
+          "banner_image": "/banner1.png",
+          "category": "Tech & Coding",
           "chapters": [
             {
-              "title": "Giới thiệu về Python",
-              "content": "Tìm hiểu Python là gì, lịch sử phát triển và các ứng dụng thực tế."
-            },
-            {
-              "title": "Cài đặt và thiết lập môi trường",
-              "content": "Hướng dẫn cài đặt Python, thiết lập VS Code và chạy chương trình đầu tiên."
-            },
-            {
-              "title": "Các kiểu dữ liệu cơ bản",
-              "content": "Tìm hiểu số, chuỗi, danh sách, tuple, set và dictionary."
+              "chapterName": "Cài đặt Python",
+              "content": [
+                {
+                  "topic": "Tải và cài đặt Python",
+                  "explain": "Hướng dẫn chi tiết cách tải Python từ trang chính thức, cài đặt trên Windows/Mac/Linux, và kiểm tra phiên bản Python đã cài.",
+                  "code": "python --version",
+                  "example": "Kết quả: Python 3.11.4"
+                }
+              ]
             }
           ],
-          "quizzes": [
-            "Python dùng để làm gì?",
-            "Làm thế nào để cài đặt Python?",
-            "Danh sách (list) trong Python là gì?",
-            "Tuple khác list như thế nào?",
-            "Set có các đặc điểm gì?"
-          ],
-          "flashcards": [
-            "Python là ngôn ngữ lập trình cấp cao",
-            "List: Mảng các phần tử thay đổi được",
-            "Tuple: Mảng các phần tử không thay đổi",
-            "Set: Tập hợp các phần tử duy nhất",
-            "Dictionary: Cặp key-value",
-            "print(): Hàm in dữ liệu ra màn hình",
-            "len(): Hàm đếm số lượng phần tử",
-            "input(): Hàm nhập dữ liệu từ bàn phím",
-            "int(): Ép kiểu sang số nguyên",
-            "str(): Ép kiểu sang chuỗi"
-          ],
-          "questions": [
-            "Hãy viết một chương trình in 'Hello World' ra màn hình.",
-            "Làm thế nào để ép kiểu dữ liệu từ chuỗi thành số?",
-            "Viết một ví dụ về list trong Python.",
-            "Sự khác nhau giữa list và set là gì?",
-            "Hàm nào dùng để nhập dữ liệu từ bàn phím?"
-          ]
-        },
-        {
-          "courseName": "Python ứng dụng thực tế",
-          "description": "Khóa học nâng cao kỹ năng Python thông qua các dự án thực tế.",
-          "courseBanner": "/banner2.jpg",
-          "chapters": [
+          "quiz": [
             {
-              "title": "Tự động hóa với Python",
-              "content": "Hướng dẫn viết các script tự động hóa công việc văn phòng."
-            },
-            {
-              "title": "Xử lý file Excel với Python",
-              "content": "Sử dụng thư viện openpyxl để đọc và ghi file Excel."
-            },
-            {
-              "title": "Web scraping với BeautifulSoup",
-              "content": "Thu thập dữ liệu từ website một cách tự động."
+              "question": "Python được sử dụng để làm gì?",
+              "options": ["Lập trình web", "Phân tích dữ liệu", "Học máy", "Tất cả các đáp án trên"],
+              "correctAns": "Tất cả các đáp án trên"
             }
           ],
-          "quizzes": [
-            "Thư viện nào dùng để xử lý Excel?",
-            "Tự động hóa là gì?",
-            "Web scraping dùng để làm gì?",
-            "BeautifulSoup hỗ trợ ngôn ngữ nào?",
-            "Các bước cơ bản của một chương trình scraping là gì?"
-          ],
           "flashcards": [
-            "openpyxl: Thư viện xử lý Excel",
-            "BeautifulSoup: Công cụ thu thập dữ liệu web",
-            "requests: Gửi yêu cầu HTTP trong Python",
-            "Automation: Quá trình tự động hóa công việc",
-            "script: Đoạn chương trình nhỏ",
-            "pandas: Thư viện phân tích dữ liệu",
-            "Excel file: File bảng tính phổ biến",
-            "API: Giao diện lập trình ứng dụng",
-            "HTML parser: Bộ phân tích HTML",
-            "CSV: Định dạng file văn bản dữ liệu bảng"
+            {
+              "front": "Python là gì?",
+              "back": "Ngôn ngữ lập trình cấp cao, dễ học."
+            }
           ],
-          "questions": [
-            "Hãy viết code đọc file Excel với openpyxl.",
-            "Làm sao gửi yêu cầu HTTP bằng Python?",
-            "Viết chương trình lấy tiêu đề của một trang web.",
-            "Ưu điểm của BeautifulSoup là gì?",
-            "Khi nào nên dùng automation trong công việc?"
+          "qa": [
+            {
+              "question": "Làm sao để cài đặt Python?",
+              "answer": "Tải từ python.org và làm theo hướng dẫn cài đặt."
+            }
           ]
         }
       ]
     }
-  `
-}
+    - Không thêm bất kỳ văn bản nào ngoài JSON, bao gồm cả phần prompt hoặc bất kỳ ký tự nào khác trước/sau JSON
+    `,
+};
