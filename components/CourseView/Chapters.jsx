@@ -2,9 +2,14 @@ import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native
 import React from 'react'
 import Colors from '../../constants/Colors'
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { router } from 'expo-router';
+import { router, useRouter } from 'expo-router';
 
 export default function Chapters({ course }) {
+    const router = useRouter();
+    const isChapterComplete = (index) => {
+        const isComplete = course?.completeChapter.find(item => item == index)
+        return isComplete ? true : false
+    }
     return (
         <View style={{
             padding: 20
@@ -18,11 +23,12 @@ export default function Chapters({ course }) {
                 data={course?.chapters}
                 renderItem={({ item, index }) => (
                     <TouchableOpacity onPress={() => {
+                        console.log(item);
                         router.push({
                             pathname: '/ChapterView',
                             params: {
                                 chapterParams: JSON.stringify(item),
-                                docId: course.docId,
+                                docId: course?.docId,
                                 chapterIndex: index
                             }
                         })
@@ -44,7 +50,9 @@ export default function Chapters({ course }) {
                             <Text style={styles.chapterText}>{index + 1}</Text>
                             <Text style={styles.chapterText}>{item?.chapterName}</Text>
                         </View>
-                        <Ionicons name="play" size={24} color={Colors.PRIMARY} />
+                        {isChapterComplete(index) ?
+                            <Ionicons name="checkmark-circle" size={24} color={Colors.GREEN} />
+                            : <Ionicons name="play" size={24} color={Colors.PRIMARY} />}
                     </TouchableOpacity>
                 )}
             />
