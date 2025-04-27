@@ -1,10 +1,13 @@
-import { View, Text, FlatList, Image, StyleSheet } from 'react-native'
+import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { imageAssets } from '../../constants/Option'
 import Colors from '../../constants/Colors'
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { useRouter } from 'expo-router';
 
 export default function CourseList({ courseList }) {
+
+    const route = useRouter();
     return (
         <View style={{
             marginTop: 15
@@ -19,7 +22,14 @@ export default function CourseList({ courseList }) {
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
                 renderItem={({ item, index }) => (
-                    <View key={index} style={styles.courseContainer}>
+                    <TouchableOpacity
+                        onPress={() => route.push({
+                            pathname: '/courseView',
+                            params: {
+                                courseParams: JSON.stringify(item)
+                            }
+                        })}
+                        key={index} style={styles.courseContainer}>
                         <Image source={imageAssets[item.banner_image]}
                             style={{
                                 width: '100%',
@@ -43,9 +53,9 @@ export default function CourseList({ courseList }) {
                             <Text style={{
                                 fontFamily: 'outfit',
                             }}>
-                                {item?.chapters?.length}Chương</Text>
+                                {item?.chapters?.length} Chương</Text>
                         </View>
-                    </View>
+                    </TouchableOpacity>
                 )
                 }
             />

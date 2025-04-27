@@ -30,7 +30,7 @@ export default function Home() {
     }
     return (
         <FlatList
-            data={courseList}
+            data={[]}
             ListHeaderComponent={
                 <View style={{
                     padding: 25,
@@ -42,7 +42,6 @@ export default function Home() {
                         <View>
                             <CourseProgress courseList={courseList} />
                             <PraticeSection />
-                            <CourseList courseList={courseList} />
                             <CourseList courseList={courseList} />
                         </View>
                     }

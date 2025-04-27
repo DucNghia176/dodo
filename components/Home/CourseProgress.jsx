@@ -13,7 +13,7 @@ export default function CourseProgress({ courseList }) {
             <Text style={{
                 fontFamily: 'outfit-bold',
                 fontSize: 25
-            }}>Progress</Text>
+            }}>Tiến độ</Text>
 
             <FlatList
                 data={courseList}

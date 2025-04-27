@@ -1,19 +1,22 @@
 export const PracticeOption = [
     {
-        name: 'Quiz',
+        // name: 'Quiz',
+        name: 'Trắc nghiệm',
         image: require('./../assets/images/quizz.png'),
         icon: require('./../assets/images/quiz.png'),
         path: '/quiz'
     },
     {
-        name: 'Flashcards',
+        // name: 'Flashcards',
+        name: 'Thẻ ghi nhớ',
         image: require('./../assets/images/flashcard.png'),
         icon: require('./../assets/images/layers.png'),
         path: '/flashcards'
 
     },
     {
-        name: 'Question & Ans',
+        // name: 'Question & Ans',
+        name: 'Hỏi & Đáp',
         image: require('./../assets/images/notes.png'),
         icon: require('./../assets/images/qa.png'),
         path: '/questionAnswer'
@@ -31,7 +34,9 @@ export const imageAssets = {
 
 };
 
-export const CourseCategory = ["Tech & Coding", "Business & Finance", "Health & Fitness", "Science & Engineering", "Arts & Creativity"]
+export const CourseCategory = ["Công nghệ & Lập trình", "Kinh doanh & Tài chính", "Sức khỏe & Thể hình", "Khoa học & Kỹ thuật", "Nghệ thuật & Sáng tạo"];
+
+// export const CourseCategory = ["Tech & Coding", "Business & Finance", "Health & Fitness", "Science & Engineering", "Arts & Creativity"]
 
 export const ProfileMenu = [
     {

@@ -50,18 +50,14 @@ export default function AddCourse() {
     };
 
     const onGenerateCourse = async () => {
-        if (selectedTopic.length === 0) {
-            alert('Vui lòng chọn ít nhất một chủ đề!');
-            return;
-        }
         try {
             setLoading(true);
             const topicsString = selectedTopic.join(', ');
             const PROMPT = `${topicsString}${Prompt.COURSE}`;
-            console.log('Course Prompt:', PROMPT); // Debug
+            // console.log('Course Prompt:', PROMPT); // Debug
             const aiResp = await GeneraCourseAIModel.sendMessage(PROMPT);
             let responseText = aiResp.response.text();
-            console.log('Raw Course Response:', responseText); // Debug
+            // console.log('Raw Course Response:', responseText); // Debug
             if (!responseText || !responseText.trim()) {
                 throw new Error('Phản hồi từ API rỗng hoặc không hợp lệ');
             }
@@ -72,24 +68,25 @@ export default function AddCourse() {
                 responseText = responseText.substring(jsonStartIndex);
             }
 
-            const responseData = JSON.parse(responseText);
-            const courses = responseData.courses || (Array.isArray(responseData) ? responseData : [responseData]);
-            console.log('Parsed Courses:', courses); // Debug
-
+            const resp = JSON.parse(responseText);
+            const courses = resp.courses;
+            // console.log('Parsed Courses:', courses); // Debug
             for (const courseItem of courses) {
+                const docId = Date.now().toString();
                 const standardizedCourse = {
                     courseTitle: courseItem.courseTitle || courseItem.courseName,
                     description: courseItem.description,
                     banner_image: courseItem.banner_image || courseItem.courseBanner,
-                    category: courseItem.category || "Tech & Coding",
+                    category: courseItem.category,
                     chapters: courseItem.chapters,
                     quiz: courseItem.quiz || courseItem.quizzes,
                     flashcards: courseItem.flashcards,
                     qa: courseItem.qa || courseItem.questions,
                     createdOn: new Date(),
                     createdBy: userDetail?.email || 'unknown',
+                    docId: docId
                 };
-                await setDoc(doc(db, 'Courses', Date.now().toString()), standardizedCourse);
+                await setDoc(doc(db, 'Courses', docId), standardizedCourse);
             }
 
             alert('Khóa học đã được tạo thành công!');
