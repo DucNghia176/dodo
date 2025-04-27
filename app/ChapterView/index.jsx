@@ -59,7 +59,8 @@ export default function ChapterView() {
             });
             console.log("Lưu thành công!");
             // Quay lại trang trước
-            router.back();
+            // router.back();
+            router.replace('/courseView/' + docId)
         } catch (error) {
             console.error("Lỗi khi lưu chương vào Firestore:", error);
         } finally {
