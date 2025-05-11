@@ -11,10 +11,8 @@ import PraticeSection from "../../components/Home/PraticeSection";
 import Colors from "../../constants/Colors";
 
 export default function Home() {
-    const { userDetail, setUserDetai } = useContext(UserDetailContext);
-
+    const { userDetail, setUserDetail } = useContext(UserDetailContext);
     const [courseList, setCourseList] = useState([]);
-
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
@@ -24,7 +22,7 @@ export default function Home() {
     const GetCourseList = async () => {
         setLoading(true);
         setCourseList([]);
-        const q = query(collection(db, 'Courses'), where("createdBy", '==', userDetail?.email));
+        const q = query(collection(db, 'Courses'), where("createdBy", '==', userDetail?.email),);
         const querySnapshot = await getDocs(q);
 
         querySnapshot.forEach((doc) => {
