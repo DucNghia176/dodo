@@ -1,24 +1,31 @@
-import { View, Text, FlatList } from 'react-native'
-import React from 'react'
-import { Image } from 'react-native'
-import { imageAssets } from '../../constants/Option'
-import Colors from '../../constants/Colors'
+import { View, Text, FlatList } from 'react-native';
+import React from 'react';
+import { Image } from 'react-native';
+import { imageAssets } from '../../constants/Option';
+import Colors from '../../constants/Colors';
 import * as Progress from 'react-native-progress';
 
 export default function CourseProgress({ courseList }) {
     const GetCompletedChapters = (course) => {
-        const completedChapter = course?.completedChapter?.length;
-        const perc = completedChapter / course?.chapters?.length;
-        return perc
-    }
+        if (!course?.chapters || course.chapters.length === 0) {
+            return 0;
+        }
+        // Loại bỏ các chapter hoàn thành trùng lặp
+        const uniqueCompletedChapters = [...new Set(course?.completeChapter || [])];
+        // Đảm bảo số chương hoàn thành không vượt quá tổng số chương
+        const completedChapterCount = Math.min(uniqueCompletedChapters.length, course.chapters.length);
+        const perc = completedChapterCount / course.chapters.length;
+        return perc;
+    };
 
     return (
         <View style={{
             marginTop: 10
         }}>
             <Text style={{
-                fontFamily: 'outfit-bold',
-                fontSize: 25
+                fontFamily: 'Inter-bold',
+                fontSize: 25,
+                color: Colors.WHITE
             }}>Tiến độ</Text>
 
             <FlatList
@@ -33,11 +40,12 @@ export default function CourseProgress({ courseList }) {
                         borderRadius: 8,
                         width: 280
                     }}>
-                        <View style={{
-                            display: 'flex',
-                            flexDirection: 'row',
-                            gap: 8
-                        }}>
+                        <View key={index}
+                            style={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                gap: 8
+                            }}>
                             <Image source={imageAssets[item?.banner_image]}
                                 style={{
                                     width: 60,
@@ -48,14 +56,14 @@ export default function CourseProgress({ courseList }) {
                                 flex: 1
                             }}>
                                 <Text
-                                    numberOfLines={2}
+                                    numberOfLines={3}
                                     style={{
-                                        fontFamily: 'outfit-bold',
+                                        fontFamily: 'Inter-bold',
                                         fontSize: 19,
                                         flexWrap: 'wrap'
-                                    }}>{item?.courseList}</Text>
+                                    }}>{item?.courseTitle}</Text>
                                 <Text style={{
-                                    fontFamily: 'outfit',
+                                    fontFamily: 'Inter',
                                     fontSize: 15
                                 }}>{item?.chapters?.length} Chương</Text>
                             </View>
@@ -66,14 +74,15 @@ export default function CourseProgress({ courseList }) {
                         }}>
                             <Progress.Bar progress={GetCompletedChapters(item)} width={250} />
                             <Text style={{
-                                fontFamily: 'outfit',
+                                fontFamily: 'Inter',
                                 marginTop: 2
-                            }}>3/5 Chương đã hoàn thành</Text>
+                            }}>
+                                {Math.min([...new Set(item?.completeChapter || [])].length, item?.chapters?.length || 0)}/{item?.chapters?.length || 0} Chương đã hoàn thành
+                            </Text>
                         </View>
                     </View>
                 )}
             />
-
         </View>
-    )
+    );
 }

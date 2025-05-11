@@ -1,15 +1,13 @@
-import { View, Text, Image, StyleSheet, Pressable, ToastAndroid, ActivityIndicator } from "react-native";
+import { View, Text, Image, StyleSheet, Pressable, ToastAndroid, ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView } from "react-native";
 import React, { useContext, useState } from "react";
-import Colors from "../../constants/Colors"; // Cập nhật đường dẫn
-import { TextInput } from "react-native";
-import { TouchableOpacity } from "react-native";
+import Colors from "../../constants/Colors";
+import { TextInput, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../config/firebaseConfig"; // Cập nhật đường dẫn
+import { auth, db } from "../../config/firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
-import { UserDetailContext } from "../../context/UserDetailContext"; // Cập nhật đường dẫn
+import { UserDetailContext } from "../../context/UserDetailContext";
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { db } from "../../config/firebaseConfig";
 
 export default function SignIn() {
     const router = useRouter();
@@ -60,140 +58,156 @@ export default function SignIn() {
         console.log(result);
         setUserDetail(result.data());
     };
+
     return (
-        <View
-            style={{
-                display: 'flex',
-                alignItems: "center",
-                paddingTop: 100,
-                flex: 1,
-                backgroundColor: Colors.WHITE
-            }}
+        <KeyboardAvoidingView
+            style={styles.container}
+            behavior={Platform.OS === "android" ? "padding" : "height"}
+            keyboardVerticalOffset={Platform.OS === "android" ? 100 : 80}
         >
-            <Image
-                source={require("./../../assets/images/logo.png")}
-                style={{
-                    width: 180,
-                    height: 180,
-                }}
-            />
-            <Text
-                style={{
-                    fontSize: 30,
-                    fontFamily: "outfit-bold"
-                }}
-            >Chào Mừng Đến Với DoDo</Text>
-
-            <View style={{ width: 340, marginTop: 20 }}>
-                <TextInput
-                    placeholder="Nhập Email"
-                    onChangeText={(value) => {
-                        setEmail(value);
-                        setEmailError(false);
-                    }}
-                    onBlur={() => setEmailError(!email)}
-                    style={[styles.TextInput, emailError && styles.errorInput]}
-                />
-                {emailError && (
-                    <Text style={styles.errorText}>Vui lòng không để trống</Text>
-                )}
-            </View>
-
-            <View style={{ width: 340, marginTop: 20 }}>
-                <View style={{ position: 'relative' }}>
-                    <TextInput
-                        placeholder="Nhập Mật Khẩu"
-                        onChangeText={(value) => {
-                            setPassword(value);
-                            setPasswordError(false);
-                        }}
-                        onBlur={() => setPasswordError(!password)}
-                        secureTextEntry={!showPassword}
-                        style={[styles.TextInput, passwordError && styles.errorInput]}
-                    />
-                    <TouchableOpacity
-                        onPress={() => setShowPassword(!showPassword)}
-                        style={styles.eyeIcon}
-                    >
-                        <Ionicons
-                            name={showPassword ? "eye-off" : "eye"}
-                            size={24}
-                            color={Colors.PRIMARY}
-                        />
-                    </TouchableOpacity>
-                </View>
-                {passwordError && (
-                    <Text style={styles.errorText}>Vui lòng không để trống</Text>
-                )}
-            </View>
-
-            <TouchableOpacity
-                onPress={onSignInClick}
-                disabled={loading}
-                style={{
-                    padding: 15,
-                    backgroundColor: Colors.PRIMARY,
-                    width: 340,
-                    marginTop: 25,
-                    borderRadius: 10
-                }}
+            <ScrollView
+                contentContainerStyle={styles.scrollContent}
+                keyboardShouldPersistTaps="handled"
             >
-                {!loading ? (
-                    <Text style={{
-                        fontFamily: 'outfit',
-                        fontSize: 20,
-                        color: Colors.WHITE,
-                        textAlign: 'center'
-                    }}>Đăng Nhập</Text>
-                ) : (
-                    <ActivityIndicator size={'large'} color={Colors.WHITE} />
-                )}
-            </TouchableOpacity>
+                <Image
+                    source={require("./../../assets/images/logo.png")}
+                    style={styles.logo}
+                />
+                <Text style={styles.title}>Chào Mừng Đến Với DoDo</Text>
 
-            <View style={{
-                display: 'flex',
-                flexDirection: 'row',
-                gap: 5,
-                marginTop: 20
-            }}>
-                <Text style={{ fontFamily: 'outfit' }}>Bạn chưa có tài khoản?</Text>
-                <Pressable
-                    onPress={() => router.push('/auth/signUp')}
+                <View style={styles.inputContainer}>
+                    <TextInput
+                        placeholder="Nhập Email"
+                        onChangeText={(value) => {
+                            setEmail(value);
+                            setEmailError(false);
+                        }}
+                        onBlur={() => setEmailError(!email)}
+                        style={[styles.TextInput, emailError && styles.errorInput]}
+                    />
+                    {emailError && (
+                        <Text style={styles.errorText}>Vui lòng không để trống</Text>
+                    )}
+                </View>
+
+                <View style={styles.inputContainer}>
+                    <View style={{ position: 'relative' }}>
+                        <TextInput
+                            placeholder="Nhập Mật Khẩu"
+                            onChangeText={(value) => {
+                                setPassword(value);
+                                setPasswordError(false);
+                            }}
+                            onBlur={() => setPasswordError(!password)}
+                            secureTextEntry={!showPassword}
+                            style={[styles.TextInput, passwordError && styles.errorInput]}
+                        />
+                        <TouchableOpacity
+                            onPress={() => setShowPassword(!showPassword)}
+                            style={styles.eyeIcon}
+                        >
+                            <Ionicons
+                                name={showPassword ? "eye-off" : "eye"}
+                                size={24}
+                                color={Colors.PRIMARY}
+                            />
+                        </TouchableOpacity>
+                    </View>
+                    {passwordError && (
+                        <Text style={styles.errorText}>Vui lòng không để trống</Text>
+                    )}
+                </View>
+
+                <TouchableOpacity
+                    onPress={onSignInClick}
+                    disabled={loading}
+                    style={styles.button}
                 >
-                    <Text style={{
-                        color: Colors.PRIMARY,
-                        fontFamily: 'outfit-bold'
-                    }}>Đăng Kí</Text>
-                </Pressable>
-            </View>
-        </View>
+                    {!loading ? (
+                        <Text style={styles.buttonText}>Đăng Nhập</Text>
+                    ) : (
+                        <ActivityIndicator size={'large'} color={Colors.WHITE} />
+                    )}
+                </TouchableOpacity>
+
+                <View style={styles.footer}>
+                    <Text style={{ fontFamily: 'outfit' }}>Bạn chưa có tài khoản?</Text>
+                    <Pressable onPress={() => router.push('/auth/signUp')}>
+                        <Text style={styles.linkText}>Đăng Kí</Text>
+                    </Pressable>
+                </View>
+            </ScrollView>
+        </KeyboardAvoidingView>
     );
 }
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: Colors.WHITE,
+    },
+    scrollContent: {
+        flexGrow: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 20,
+    },
+    logo: {
+        width: 180,
+        height: 180,
+    },
+    title: {
+        fontSize: 30,
+        fontFamily: 'Inter-bold',
+        marginBottom: 20,
+    },
+    inputContainer: {
+        width: 340,
+        marginVertical: 10,
+    },
     TextInput: {
         borderWidth: 1,
-        width: 340,
         padding: 15,
         fontSize: 18,
         borderRadius: 8,
-        marginLeft: 20,
-        marginRight: 20
+        width: '100%',
     },
     errorInput: {
         borderColor: 'red',
-        borderWidth: 2
+        borderWidth: 2,
     },
     errorText: {
         color: 'red',
         fontSize: 14,
-        fontFamily: 'outfit',
+        fontFamily: 'Inter',
         marginLeft: 20,
-        marginTop: 5
+        marginTop: 5,
     },
     eyeIcon: {
         position: 'absolute',
-        right: 30,
-        top: 18
-    }
+        right: 15,
+        top: 15,
+    },
+    button: {
+        padding: 15,
+        backgroundColor: Colors.PRIMARY,
+        width: 340,
+        marginTop: 20,
+        borderRadius: 10,
+    },
+    buttonText: {
+        fontFamily: 'outfit',
+        fontSize: 20,
+        color: Colors.WHITE,
+        textAlign: 'center',
+    },
+    footer: {
+        flexDirection: 'row',
+        gap: 5,
+        marginTop: 20,
+    },
+    linkText: {
+        color: Colors.PRIMARY,
+        fontFamily: 'Inter-bold',
+    },
 });

@@ -49,7 +49,7 @@ export default function Index() {
           fontSize: 30,
           textAlign: 'center',
           color: Colors.WHITE,
-          fontFamily: 'outfit-bold',
+          fontFamily: 'Inter-bold',
         }}>Hãy sẵn sàng học tập cùng DoDo</Text>
 
         <Text style={{
@@ -57,7 +57,7 @@ export default function Index() {
           color: Colors.WHITE,
           marginTop: 20,
           textAlign: 'center',
-          fontFamily: 'outfit'
+          fontFamily: 'Inter'
         }}>
           Biến ý tưởng của bạn thành nội dung học tập hấp dẫn, dễ dàng với sự hỗ trợ của AI
         </Text>
@@ -97,6 +97,6 @@ const styles = StyleSheet.create({
   buttonText: {
     textAlign: 'center',
     fontSize: 18,
-    fontFamily: 'outfit',
+    fontFamily: 'Inter',
   }
 })

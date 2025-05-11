@@ -13,7 +13,7 @@ export default function CourseList({ courseList }) {
             marginTop: 15
         }}>
             <Text style={{
-                fontFamily: 'outfit-bold',
+                fontFamily: 'Inter-bold',
                 fontSize: 25
             }}>Khóa Học</Text>
 
@@ -38,7 +38,7 @@ export default function CourseList({ courseList }) {
                             }}
                         />
                         <Text style={{
-                            fontFamily: 'outfit-bold',
+                            fontFamily: 'Inter-bold',
                             fontSize: 18,
                             marginTop: 10
                         }}>{item?.courseTitle}</Text>
@@ -51,7 +51,7 @@ export default function CourseList({ courseList }) {
                         }}>
                             <Ionicons name="book-outline" size={24} color="black" />
                             <Text style={{
-                                fontFamily: 'outfit',
+                                fontFamily: 'Inter',
                             }}>
                                 {item?.chapters?.length} Chương</Text>
                         </View>

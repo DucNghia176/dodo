@@ -18,7 +18,7 @@ export default function NoCourse() {
                 }}
             />
             <Text style={{
-                fontFamily: 'outfit-bold',
+                fontFamily: 'Inter-bold',
                 fontSize: 25,
                 textAlign: 'center'
             }}>Bạn chưa có khóa học nào</Text>

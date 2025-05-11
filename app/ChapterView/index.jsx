@@ -22,7 +22,7 @@ export default function ChapterView() {
 
     let chapters;
     try {
-        console.log("Nhận được chapterParams:", chapterParams);
+        // console.log("Nhận được chapterParams:", chapterParams);
         chapters = JSON.parse(chapterParams);
     } catch (error) {
         console.error("Lỗi khi phân tích chapterParams:", error, "Nhận được:", chapterParams);
@@ -113,11 +113,11 @@ const styles = StyleSheet.create({
         marginTop: 20,
     },
     topic: {
-        fontFamily: 'outfit-bold',
+        fontFamily: 'Inter-bold',
         fontSize: 20,
     },
     explain: {
-        fontFamily: 'outfit',
+        fontFamily: 'Inter',
         fontSize: 20,
         marginTop: 7,
     },
@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
         padding: 15,
         backgroundColor: Colors.BG_GRAY,
         borderRadius: 15,
-        fontFamily: 'outfit',
+        fontFamily: 'Inter',
         fontSize: 18,
         marginTop: 15,
     },

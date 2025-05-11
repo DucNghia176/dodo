@@ -1,4 +1,4 @@
-import { View, Text, Platform, FlatList } from "react-native";
+import { View, Text, Platform, FlatList, Image } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import Header from "../../components/Home/Header";
 import NoCourse from "../../components/Home/NoCourse";
@@ -8,6 +8,7 @@ import { UserDetailContext } from "../../context/UserDetailContext";
 import CourseList from "../../components/Home/CourseList";
 import CourseProgress from "../../components/Home/CourseProgress";
 import PraticeSection from "../../components/Home/PraticeSection";
+import Colors from "../../constants/Colors";
 
 export default function Home() {
     const { userDetail, setUserDetai } = useContext(UserDetailContext);
@@ -39,19 +40,28 @@ export default function Home() {
             onRefresh={() => GetCourseList()}
             refreshing={loading}
             ListHeaderComponent={
-                <View style={{
-                    padding: 25,
-                    paddingTop: Platform.OS == 'android' && 45
-                }}>
-                    <Header />
-                    {courseList?.length == 0 ?
-                        <NoCourse /> :
-                        <View>
-                            <CourseProgress courseList={courseList} />
-                            <PraticeSection />
-                            <CourseList courseList={courseList} />
-                        </View>
-                    }
+                <View style={{ flex: 1, backgroundColor: Colors.WHITE }}>
+                    <Image source={require('./../../assets/images/wave.png')}
+                        style={{
+                            position: 'absolute',
+                            width: '100%',
+                            height: 700
+                        }}
+                    />
+                    <View style={{
+                        padding: 25,
+                        paddingTop: Platform.OS == 'android' && 45
+                    }}>
+                        <Header />
+                        {courseList?.length == 0 ?
+                            <NoCourse /> :
+                            <View>
+                                <CourseProgress courseList={courseList} />
+                                <PraticeSection />
+                                <CourseList courseList={courseList} />
+                            </View>
+                        }
+                    </View>
                 </View>
             }
         />
