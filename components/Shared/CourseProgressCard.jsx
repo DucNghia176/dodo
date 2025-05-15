@@ -51,7 +51,8 @@ export default function CourseProgressCard({ item, width = 280 }) {
                     </Text>
                     <Text style={{
                         fontFamily: 'Inter',
-                        fontSize: 15
+                        fontSize: 15,
+                        color: Colors.BLUE,
                     }}>
                         {item?.chapters?.length} Chương
                     </Text>
@@ -64,7 +65,7 @@ export default function CourseProgressCard({ item, width = 280 }) {
                 <Progress.Bar progress={GetCompletedChapters(item)} width={width - 30} />
                 <Text style={{
                     fontFamily: 'Inter',
-                    marginTop: 2
+                    marginTop: 2,
                 }}>
                     {Math.min([...new Set(item?.completeChapter || [])].length, item?.chapters?.length || 0)}/{item?.chapters?.length || 0} Chương đã hoàn thành
                 </Text>

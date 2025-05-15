@@ -8,7 +8,7 @@ import { db } from './../../../config/firebaseConfig'
 import { doc, getDoc } from 'firebase/firestore';
 
 export default function CourseView() {
-    const { courseParams, courseId } = useLocalSearchParams();
+    const { courseParams, courseId, enroll } = useLocalSearchParams();
     const [course, setCourse] = useState([]);
     // let course;
     // course = JSON.parse(courseParams);
@@ -33,7 +33,7 @@ export default function CourseView() {
             data={[]}
             ListHeaderComponent={
                 <View style={{ flex: 1, backgroundColor: Colors.WHITE }}>
-                    <Intro course={course} />
+                    <Intro course={course} enroll={enroll} />
                     <Chapters course={course} />
                 </View>
             }

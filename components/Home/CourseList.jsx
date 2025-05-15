@@ -5,7 +5,7 @@ import Colors from '../../constants/Colors'
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
 
-export default function CourseList({ courseList }) {
+export default function CourseList({ courseList, heading = 'Khóa Học', enroll = false }) {
 
     const route = useRouter();
     return (
@@ -15,7 +15,7 @@ export default function CourseList({ courseList }) {
             <Text style={{
                 fontFamily: 'Inter-bold',
                 fontSize: 25
-            }}>Khóa Học</Text>
+            }}>{heading}</Text>
 
             <FlatList
                 data={courseList}
@@ -26,7 +26,8 @@ export default function CourseList({ courseList }) {
                         onPress={() => route.push({
                             pathname: '/courseView/' + item?.docId,
                             params: {
-                                courseParams: JSON.stringify(item)
+                                courseParams: JSON.stringify(item),
+                                enroll: enroll
                             }
                         })}
                         key={index} style={styles.courseContainer}>
@@ -49,9 +50,10 @@ export default function CourseList({ courseList }) {
                             alignItems: 'center',
                             marginTop: 5
                         }}>
-                            <Ionicons name="book-outline" size={24} color="black" />
+                            <Ionicons name="book-outline" size={24} color={Colors.BLUE} />
                             <Text style={{
                                 fontFamily: 'Inter',
+                                color: Colors.BLUE,
                             }}>
                                 {item?.chapters?.length} Chương</Text>
                         </View>
@@ -69,6 +71,8 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.BG_GRAY,
         margin: 6,
         borderRadius: 15,
-        width: 260
+        width: 260,
+        elevation: 1,
+        borderWidth: 0.2
     }
 })

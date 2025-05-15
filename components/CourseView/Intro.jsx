@@ -1,14 +1,38 @@
 import { View, Text, Image, Pressable } from 'react-native'
-import React from 'react'
+import React, { useContext, useState } from 'react'
 import { imageAssets } from '../../constants/Option'
 import { Ionicons } from '@expo/vector-icons'
 import Colors from '../../constants/Colors'
 import Button from '../Shared/Button'
 import { router, useRouter } from 'expo-router'
+import { UserDetailContext } from './../../context/UserDetailContext'
+import { doc } from 'firebase/firestore'
+import { db } from '../../config/firebaseConfig'
 
-export default function Intro({ course }) {
+export default function Intro({ course, enroll }) {
 
     const route = useRouter();
+    const { userDetail, setUserDetail } = useContext(UserDetailContext)
+    const [loading, setLoading] = useState(false);
+    const onEnrollCourse = async () => {
+        const docId = Date.now().toString();
+        setLoading(true);
+        const data = {
+            ...course,
+            createdBy: userDetail?.email,
+            createdOn: new Date(),
+            enrolled: true
+        }
+        await setDoc(doc(db, 'Courses', docId), data)
+        route.push({
+            pathname: '/courseView/' + docId,
+            params: {
+                courseParams: JSON.stringify(data),
+                enroll: false
+            }
+        })
+        setLoading(false);
+    }
     return (
         <View>
 
@@ -49,14 +73,19 @@ export default function Intro({ course }) {
                     fontSize: 18,
                     color: Colors.GRAY
                 }}>{course?.description}</Text>
-
-                <Button text={'Bắt đầu ngay'}
-                    onPress={() => console.log('')} />
+                {enroll == 'true' ? <Button text="Đăng ký ngay"
+                    loading={loading}
+                    onPress={() => onEnrollCourse()}
+                /> :
+                    <Button text={'Bắt đầu ngay'}
+                        onPress={() => console.log('')} />}
             </View>
             <Pressable style={{
                 position: 'absolute',
                 padding: 10
-            }} onPress={() => router.replace('/(tabs)/home')}>
+            }} onPress={() => router.back()
+                // replace('/(tabs)/home')
+            }>
                 <Ionicons name="arrow-back" size={24} color="black" />
             </Pressable>
 
