@@ -1,22 +1,36 @@
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Colors from '../../constants/Colors';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
+import { doc, onSnapshot } from 'firebase/firestore';
+import { db } from '../../config/firebaseConfig';
 
 export default function Chapters({ course }) {
     const router = useRouter();
+    const [courseData, setCourseData] = useState(course);
+
+    useEffect(() => {
+        if (course?.docId) {
+            const unsubscribe = onSnapshot(doc(db, 'Courses', course.docId), (doc) => {
+                if (doc.exists()) {
+                    setCourseData(doc.data());
+                }
+            });
+
+            return () => unsubscribe();
+        }
+    }, [course?.docId]);
 
     const isChapterComplete = (index) => {
-        // Kiểm tra course và completeChapter có tồn tại và là mảng
-        if (!course || !Array.isArray(course.completeChapter)) {
+        if (!courseData || !Array.isArray(courseData.completeChapter)) {
             return false;
         }
-        return course.completeChapter.find(item => item === index) !== undefined;
+        return courseData.completeChapter.includes(index);
     };
 
-    // Kiểm tra course và chapters trước khi render FlatList
-    if (!course || !Array.isArray(course.chapters)) {
+    // Kiểm tra courseData và chapters trước khi render FlatList
+    if (!courseData || !Array.isArray(courseData.chapters)) {
         return (
             <View style={{ padding: 20 }}>
                 <Text style={{ fontFamily: 'Inter-bold', fontSize: 25 }}>Chương</Text>
@@ -30,16 +44,15 @@ export default function Chapters({ course }) {
             <Text style={{ fontFamily: 'Inter-bold', fontSize: 25 }}>Chương</Text>
 
             <FlatList
-                data={course.chapters}
+                data={courseData.chapters}
                 renderItem={({ item, index }) => (
                     <TouchableOpacity
                         onPress={() => {
-                            console.log(item);
                             router.push({
                                 pathname: '/ChapterView',
                                 params: {
                                     chapterParams: JSON.stringify(item),
-                                    docId: course?.docId,
+                                    docId: courseData?.docId,
                                     chapterIndex: index,
                                 },
                             });

@@ -21,7 +21,8 @@ export default function CourseProgressCard({ item, width = 280 }) {
             padding: 7,
             backgroundColor: Colors.BG_GRAY,
             borderRadius: 8,
-            width: width
+            width: width,
+            minHeight: 130,
         }}>
             <View style={{
                 display: 'flex',
@@ -37,14 +38,16 @@ export default function CourseProgressCard({ item, width = 280 }) {
                     }}
                 />
                 <View style={{
-                    flex: 1
+                    flex: 1,
+                    alignItems: 'flex-start'
                 }}>
                     <Text
-                        numberOfLines={3}
+                        numberOfLines={2}
+                        ellipsizeMode="tail"
                         style={{
                             fontFamily: 'Inter-bold',
                             fontSize: 19,
-                            flexWrap: 'wrap'
+                            flex: 1,
                         }}
                     >
                         {item?.courseTitle}

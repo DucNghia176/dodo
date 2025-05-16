@@ -12,30 +12,40 @@ import CourseListGrid from '../../../components/PractiveScreen/CourseListGrid';
 export default function PracticeType() {
     const { type } = useLocalSearchParams();
     const option = PracticeOption.find(item => item.name == type);
-    console.log(option)
+    console.log('=== DEBUG PracticeType ===');
+    console.log('Type:', type);
+    console.log('Option:', option);
     const router = useRouter();
     const { userDetail, setUserDetail } = useContext(UserDetailContext);
+    console.log('UserDetail:', userDetail);
     const [loading, setLoading] = useState(false);
     const [courseList, setCourseList] = useState([]);
+
     useEffect(() => {
+        console.log('useEffect triggered, userDetail:', userDetail);
         userDetail && GetCourseList();
     }, [userDetail])
+
     const GetCourseList = async () => {
+        console.log('GetCourseList started');
         setLoading(true);
         setCourseList([]);
         try {
             const q = query(collection(db, 'Courses'),
                 where('createBy', '==', userDetail?.email),
                 orderBy('createdOn', 'desc'));
+            console.log('Query created with email:', userDetail?.email);
 
             const querySnapshot = await getDocs(q);
+            console.log('Query snapshot size:', querySnapshot.size);
+
             querySnapshot.forEach((doc) => {
-                // console.log(doc.data());
+                console.log('Course data:', doc.data());
                 setCourseList(prev => [...prev, doc.data()]);
             });
             setLoading(false);
         } catch (e) {
-            console.log(e);
+            console.log('Error in GetCourseList:', e);
             setLoading(false);
         }
     }

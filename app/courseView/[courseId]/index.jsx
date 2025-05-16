@@ -1,33 +1,39 @@
 import { View, Text, FlatList } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import Intro from '../../../components/CourseView/Intro';
 import Colors from '../../../constants/Colors';
 import Chapters from '../../../components/CourseView/Chapters';
 import { db } from './../../../config/firebaseConfig'
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, onSnapshot } from 'firebase/firestore';
 
 export default function CourseView() {
     const { courseParams, courseId, enroll } = useLocalSearchParams();
     const [course, setCourse] = useState([]);
-    // let course;
-    // course = JSON.parse(courseParams);
+    const router = useRouter();
 
     useEffect(() => {
+        let unsubscribe;
+
         if (!courseParams) {
-            GetCourseById();
-        }
-        else {
+            // Subscribe to real-time updates
+            unsubscribe = onSnapshot(doc(db, 'Courses', courseId), (doc) => {
+                if (doc.exists()) {
+                    setCourse(doc.data());
+                }
+            });
+        } else {
             setCourse(JSON.parse(courseParams));
         }
-    }, [courseId])
 
-    const GetCourseById = async () => {
-        const docRef = await getDoc(doc(db, 'Courses', courseId))
-        const courseData = docRef.data();
-        setCourse(courseData)
-    }
-    console.log(courseId);
+        // Cleanup subscription
+        return () => {
+            if (unsubscribe) {
+                unsubscribe();
+            }
+        };
+    }, [courseId]);
+
     return course && (
         <FlatList
             data={[]}

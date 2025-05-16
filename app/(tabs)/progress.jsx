@@ -1,4 +1,4 @@
-import { View, Text, Image, FlatList, TouchableOpacity } from "react-native";
+import { View, Text, Image, FlatList, TouchableOpacity, ScrollView } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { Tabs, useRouter } from "expo-router";
 import { UserDetailContext } from "../../context/UserDetailContext";
@@ -33,7 +33,7 @@ export default function Progress() {
         setLoading(false);
     }
     return (
-        <View>
+        <View style={{ flex: 1 }}>
             <Image source={require('./../../assets/images/wave.png')}
                 style={{
                     position: 'absolute',
@@ -43,9 +43,10 @@ export default function Progress() {
             />
             <View style={{
                 width: '100%',
-                position: 'absolute',
                 padding: 20,
-                marginTop: 20
+                marginTop: 20,
+                position: 'absolute',
+                zIndex: 1
             }}>
                 <Text style={{
                     fontFamily: 'Inter-bold',
@@ -55,23 +56,31 @@ export default function Progress() {
                 }}>
                     Tiến độ khóa học
                 </Text>
-                <FlatList
-                    data={courseList}
-                    showsVerticalScrollIndicator={false}
-                    onRefresh={() => GetCourseList()}
-                    refreshing={loading}
-                    renderItem={({ item, index }) => (
-                        <TouchableOpacity onPress={() => route.push({
-                            pathname: '/courseView/' + item?.docId,
-                            params: {
-                                courseParams: JSON.stringify(item)
-                            }
-                        })}>
-                            <CourseProgressCard item={item} width={'97%'} />
-                        </TouchableOpacity>
-                    )}
-                />
             </View>
+            <ScrollView style={{ flex: 1, marginTop: 100 }}>
+                <View style={{
+                    width: '100%',
+                    padding: 20,
+                }}>
+                    <FlatList
+                        data={courseList}
+                        showsVerticalScrollIndicator={false}
+                        onRefresh={() => GetCourseList()}
+                        refreshing={loading}
+                        scrollEnabled={false}
+                        renderItem={({ item, index }) => (
+                            <TouchableOpacity onPress={() => route.push({
+                                pathname: '/courseView/' + item?.docId,
+                                params: {
+                                    courseParams: JSON.stringify(item)
+                                }
+                            })}>
+                                <CourseProgressCard item={item} width={'97%'} />
+                            </TouchableOpacity>
+                        )}
+                    />
+                </View>
+            </ScrollView>
         </View>
     )
 }
