@@ -1,23 +1,21 @@
-import { View, Text, TouchableOpacity, ScrollView, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, TextInput, Alert, StyleSheet } from 'react-native';
 import React, { useContext, useState } from 'react';
 import { UserDetailContext } from '../context/UserDetailContext';
 import Colors from '../constants/Colors';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
+import { updatePassword } from 'firebase/auth';
+import { auth } from '../config/firebaseConfig';
 
 export default function Settings() {
     const { userDetail, setUserDetail } = useContext(UserDetailContext);
     const router = useRouter();
     const [name, setName] = useState(userDetail?.name || '');
     const [isEditing, setIsEditing] = useState(false);
-
-    const themeColors = [
-        { name: 'Xanh dương', color: '#007AFF' },
-        { name: 'Tím', color: '#5856D6' },
-        { name: 'Hồng', color: '#FF2D55' },
-        { name: 'Cam', color: '#FF9500' },
-        { name: 'Xanh lá', color: '#34C759' },
-    ];
+    const [isChangingPassword, setIsChangingPassword] = useState(false);
+    const [currentPassword, setCurrentPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
 
     const handleSaveProfile = () => {
         setUserDetail(prev => ({
@@ -25,6 +23,29 @@ export default function Settings() {
             name: name
         }));
         setIsEditing(false);
+    };
+
+    const handleChangePassword = async () => {
+        if (newPassword !== confirmPassword) {
+            Alert.alert('Lỗi', 'Mật khẩu mới không khớp');
+            return;
+        }
+
+        if (newPassword.length < 6) {
+            Alert.alert('Lỗi', 'Mật khẩu phải có ít nhất 6 ký tự');
+            return;
+        }
+
+        try {
+            await updatePassword(auth.currentUser, newPassword);
+            Alert.alert('Thành công', 'Mật khẩu đã được thay đổi');
+            setIsChangingPassword(false);
+            setCurrentPassword('');
+            setNewPassword('');
+            setConfirmPassword('');
+        } catch (error) {
+            Alert.alert('Lỗi', 'Không thể thay đổi mật khẩu. Vui lòng thử lại sau');
+        }
     };
 
     return (
@@ -101,40 +122,151 @@ export default function Settings() {
                     </View>
                 </View>
 
-                {/* Màu nền */}
-                <View>
+                {/* Đổi mật khẩu */}
+                <View style={{ marginBottom: 30 }}>
                     <Text style={{
                         fontSize: 20,
                         fontFamily: 'Inter-bold',
                         marginBottom: 15
-                    }}>Màu nền</Text>
+                    }}>Đổi mật khẩu</Text>
 
                     <View style={{
-                        flexDirection: 'row',
-                        flexWrap: 'wrap',
-                        gap: 10
+                        backgroundColor: Colors.BG_GRAY,
+                        padding: 15,
+                        borderRadius: 10
                     }}>
-                        {themeColors.map((theme, index) => (
+                        {isChangingPassword ? (
+                            <View>
+                                <TextInput
+                                    value={currentPassword}
+                                    onChangeText={setCurrentPassword}
+                                    placeholder="Mật khẩu hiện tại"
+                                    secureTextEntry
+                                    style={{
+                                        borderWidth: 1,
+                                        borderColor: Colors.BLUE,
+                                        borderRadius: 5,
+                                        padding: 10,
+                                        marginBottom: 10
+                                    }}
+                                />
+                                <TextInput
+                                    value={newPassword}
+                                    onChangeText={setNewPassword}
+                                    placeholder="Mật khẩu mới"
+                                    secureTextEntry
+                                    style={{
+                                        borderWidth: 1,
+                                        borderColor: Colors.BLUE,
+                                        borderRadius: 5,
+                                        padding: 10,
+                                        marginBottom: 10
+                                    }}
+                                />
+                                <TextInput
+                                    value={confirmPassword}
+                                    onChangeText={setConfirmPassword}
+                                    placeholder="Xác nhận mật khẩu mới"
+                                    secureTextEntry
+                                    style={{
+                                        borderWidth: 1,
+                                        borderColor: Colors.BLUE,
+                                        borderRadius: 5,
+                                        padding: 10,
+                                        marginBottom: 10
+                                    }}
+                                />
+                                <View style={{ flexDirection: 'row', gap: 10 }}>
+                                    <TouchableOpacity
+                                        onPress={handleChangePassword}
+                                        style={{
+                                            flex: 1,
+                                            backgroundColor: Colors.BLUE,
+                                            padding: 10,
+                                            borderRadius: 5,
+                                            alignItems: 'center'
+                                        }}
+                                    >
+                                        <Text style={{ color: Colors.WHITE }}>Lưu</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            setIsChangingPassword(false);
+                                            setCurrentPassword('');
+                                            setNewPassword('');
+                                            setConfirmPassword('');
+                                        }}
+                                        style={{
+                                            flex: 1,
+                                            backgroundColor: Colors.GRAY,
+                                            padding: 10,
+                                            borderRadius: 5,
+                                            alignItems: 'center'
+                                        }}
+                                    >
+                                        <Text style={{ color: Colors.WHITE }}>Hủy</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        ) : (
                             <TouchableOpacity
-                                key={index}
+                                onPress={() => setIsChangingPassword(true)}
                                 style={{
-                                    width: 100,
-                                    height: 100,
-                                    backgroundColor: theme.color,
-                                    borderRadius: 10,
-                                    justifyContent: 'center',
+                                    backgroundColor: Colors.BLUE,
+                                    padding: 10,
+                                    borderRadius: 5,
                                     alignItems: 'center'
                                 }}
                             >
-                                <Text style={{
-                                    color: Colors.WHITE,
-                                    fontFamily: 'Inter-bold'
-                                }}>{theme.name}</Text>
+                                <Text style={{ color: Colors.WHITE }}>Đổi mật khẩu</Text>
                             </TouchableOpacity>
-                        ))}
+                        )}
                     </View>
                 </View>
             </View>
         </ScrollView>
     );
-} 
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: Colors.WHITE,
+        padding: 20,
+    },
+    title: {
+        fontSize: 24,
+        fontFamily: 'Inter-bold',
+        marginBottom: 20,
+    },
+    section: {
+        marginBottom: 20,
+    },
+    sectionTitle: {
+        fontSize: 18,
+        fontFamily: 'Inter-bold',
+        marginBottom: 10,
+    },
+    settingItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingVertical: 15,
+        borderBottomWidth: 1,
+        borderBottomColor: '#eee',
+    },
+    settingInfo: {
+        flex: 1,
+        marginRight: 10,
+    },
+    settingTitle: {
+        fontSize: 16,
+        fontFamily: 'Inter',
+        marginBottom: 4,
+    },
+    settingDescription: {
+        fontSize: 14,
+        fontFamily: 'Inter',
+        color: '#666',
+    },
+}); 
