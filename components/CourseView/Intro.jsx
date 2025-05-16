@@ -6,7 +6,7 @@ import Colors from '../../constants/Colors'
 import Button from '../Shared/Button'
 import { router, useRouter } from 'expo-router'
 import { UserDetailContext } from './../../context/UserDetailContext'
-import { doc, setDoc, getDoc } from 'firebase/firestore'
+import { doc, setDoc, getDoc, updateDoc, arrayUnion } from 'firebase/firestore'
 import { db } from '../../config/firebaseConfig'
 
 export default function Intro({ course, enroll }) {
@@ -26,6 +26,7 @@ export default function Intro({ course, enroll }) {
                 completeChapter: []
             }
 
+            // Add course to Courses collection
             await setDoc(doc(db, 'Courses', docId), data);
 
             const updatedDoc = await getDoc(doc(db, 'Courses', docId));

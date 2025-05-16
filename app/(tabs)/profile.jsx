@@ -43,7 +43,7 @@ export default function Profile() {
                 <MenuItem
                     icon={<Ionicons name="book" size={24} color={Colors.PRIMARY} />}
                     label="Khóa học của tôi"
-                    onPress={() => onMenuClick({ name: 'MyCourse', path: '/my-course' })}
+                    onPress={() => onMenuClick({ name: 'MyCourse', path: 'course/my-course' })}
                 />
                 <MenuItem
                     icon={<Ionicons name="analytics" size={24} color={Colors.PRIMARY} />}

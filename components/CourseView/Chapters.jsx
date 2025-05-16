@@ -67,9 +67,13 @@ export default function Chapters({ course }) {
                             alignItems: 'center',
                         }}
                     >
-                        <View style={{ flexDirection: 'row', gap: 10 }}>
+                        <View style={{ flexDirection: 'row', gap: 10, flex: 1, alignItems: 'center' }}>
                             <Text style={styles.chapterText}>{index + 1}</Text>
-                            <Text style={styles.chapterText}>{item?.chapterName || 'Không có tên'}</Text>
+                            <Text
+                                style={[styles.chapterText, { flex: 1, flexWrap: 'wrap' }]}
+                            >
+                                {item?.chapterName || 'Không có tên'}
+                            </Text>
                         </View>
                         {isChapterComplete(index) ? (
                             <Ionicons name="checkmark-circle" size={24} color={Colors.GREEN} />

@@ -26,6 +26,7 @@ export default function NoCourse() {
             <Button text={'+ Tạo khóa học mới'} onPress={() => router.push('/addCourse')} />
             <Button text={'Khám phá khóa học hiện có'}
                 type='outline'
+                onPress={() => router.push('/(tabs)/explore')}
             />
         </View>
     )
