@@ -3,10 +3,12 @@ import React, { useContext } from 'react'
 import { UserDetailContext } from '../../context/UserDetailContext'
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Colors from '../../constants/Colors';
-
+import { useRouter } from 'expo-router';
 
 export default function Header() {
     const { userDetail, setUserDetail } = useContext(UserDetailContext)
+    const router = useRouter();
+
     return (
         <View style={{
             display: 'flex',
@@ -26,8 +28,8 @@ export default function Header() {
                     color: Colors.WHITE
                 }}>Bạn đã sẵn sàng chưa?</Text>
             </View>
-            <TouchableOpacity>
-                <Ionicons name="settings-outline" size={24} color="black" />
+            <TouchableOpacity onPress={() => router.push('/settings')}>
+                <Ionicons name="settings-outline" size={24} color={Colors.WHITE} />
             </TouchableOpacity>
         </View>
     )
