@@ -37,12 +37,12 @@ export default function Explore() {
 
     // Reset hasResults về false mỗi khi searchQuery thay đổi (trừ khi rỗng ban đầu)
     React.useEffect(() => {
-        if (searchQuery !== '') {
-            setHasResults(false);
-        } else {
+        if (searchQuery === '') {
             // Nếu search query rỗng, coi như có kết quả để hiển thị tất cả
             setHasResults(true);
         }
+        // Không reset hasResults về false khi searchQuery thay đổi
+        // Để cho phép component con có thời gian kiểm tra và báo kết quả
     }, [searchQuery]);
 
     return (
