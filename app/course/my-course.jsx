@@ -1,8 +1,8 @@
-import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, Alert } from 'react-native';
 import React, { useState, useEffect, useContext } from 'react';
 import { useRouter } from 'expo-router';
 import Colors from '../../constants/Colors';
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { collection, getDocs, query, where, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../../config/firebaseConfig';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { UserDetailContext } from '../../context/UserDetailContext';
@@ -63,6 +63,33 @@ export default function MyCourse() {
                 courseParams: JSON.stringify(course)
             }
         });
+    };
+
+    const handleDeleteCourse = async (courseId) => {
+        Alert.alert(
+            "Xác nhận xóa",
+            "Bạn có chắc chắn muốn xóa khóa học này?",
+            [
+                {
+                    text: "Hủy",
+                    style: "cancel"
+                },
+                {
+                    text: "Xóa",
+                    style: "destructive",
+                    onPress: async () => {
+                        try {
+                            await deleteDoc(doc(db, 'Courses', courseId));
+                            // Refresh course list after deletion
+                            fetchCourses();
+                        } catch (error) {
+                            console.error('Error deleting course:', error);
+                            Alert.alert("Lỗi", "Không thể xóa khóa học. Vui lòng thử lại.");
+                        }
+                    }
+                }
+            ]
+        );
     };
 
     const getProgress = (course) => {
@@ -147,7 +174,12 @@ export default function MyCourse() {
                                         </Text>
                                     </View>
                                 </View>
-                                <Ionicons name="chevron-forward" size={24} color={Colors.GRAY} />
+                                <TouchableOpacity
+                                    onPress={() => handleDeleteCourse(course.id)}
+                                    style={styles.deleteButton}
+                                >
+                                    <Ionicons name="trash-outline" size={24} color={Colors.RED} />
+                                </TouchableOpacity>
                             </TouchableOpacity>
                         ))
                     ) : (
@@ -261,5 +293,8 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: Colors.GRAY,
         marginTop: 20,
+    },
+    deleteButton: {
+        padding: 8,
     },
 }); 
