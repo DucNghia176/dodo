@@ -4,8 +4,10 @@ import { UserDetailContext } from '../context/UserDetailContext';
 import Colors from '../constants/Colors';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
-import { updatePassword } from 'firebase/auth';
+import { updatePassword, reauthenticateWithCredential, EmailAuthProvider } from 'firebase/auth';
 import { auth } from '../config/firebaseConfig';
+import { doc, updateDoc } from 'firebase/firestore';
+import { db } from '../config/firebaseConfig';
 
 export default function Settings() {
     const { userDetail, setUserDetail } = useContext(UserDetailContext);
@@ -17,12 +19,26 @@ export default function Settings() {
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
 
-    const handleSaveProfile = () => {
-        setUserDetail(prev => ({
-            ...prev,
-            name: name
-        }));
-        setIsEditing(false);
+    const handleSaveProfile = async () => {
+        try {
+            // Cập nhật tên trong Firestore
+            const userRef = doc(db, 'Users', userDetail.uid);
+            await updateDoc(userRef, {
+                name: name
+            });
+
+            // Cập nhật context
+            setUserDetail(prev => ({
+                ...prev,
+                name: name
+            }));
+
+            setIsEditing(false);
+            Alert.alert('Thành công', 'Tên đã được cập nhật');
+        } catch (error) {
+            console.error("Error updating name:", error);
+            Alert.alert('Lỗi', 'Không thể cập nhật tên. Vui lòng thử lại sau');
+        }
     };
 
     const handleChangePassword = async () => {
@@ -37,14 +53,28 @@ export default function Settings() {
         }
 
         try {
+            // Xác thực lại người dùng trước khi đổi mật khẩu
+            const credential = EmailAuthProvider.credential(
+                auth.currentUser.email,
+                currentPassword
+            );
+            await reauthenticateWithCredential(auth.currentUser, credential);
+
+            // Đổi mật khẩu
             await updatePassword(auth.currentUser, newPassword);
+
             Alert.alert('Thành công', 'Mật khẩu đã được thay đổi');
             setIsChangingPassword(false);
             setCurrentPassword('');
             setNewPassword('');
             setConfirmPassword('');
         } catch (error) {
-            Alert.alert('Lỗi', 'Không thể thay đổi mật khẩu. Vui lòng thử lại sau');
+            console.error("Error changing password:", error);
+            if (error.code === 'auth/wrong-password') {
+                Alert.alert('Lỗi', 'Mật khẩu hiện tại không đúng');
+            } else {
+                Alert.alert('Lỗi', 'Không thể thay đổi mật khẩu. Vui lòng thử lại sau');
+            }
         }
     };
 
